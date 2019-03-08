@@ -1,0 +1,6 @@
+pandas==0.24.1
+tqdm==4.30.0
+requests==2.18.4
+numpy==1.16.1
+Pillow==5.4.1
+beautifulsoup4==4.7.1
