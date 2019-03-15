@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 import re
 import time
-import warnings 
+import warnings
+import os
 from PIL import Image
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -77,6 +78,12 @@ class LabTest(object):
 	def crawl_question_database(self):
 		"""爬取题库
 		"""
+		# 检查本底是否有题库文件
+		if os.path.isfile('./database.csv'):
+			go_on = input("[INPUT]: 已存在题库文件./database.csv, 是否更新题库? (y/n): ")
+			if go_on == "n":
+				return
+		
 		self.get_question_database_info()
 		print("===== 选取需要获取的题库 =====")
 		for index, database_name in enumerate(self.question_database_names):
@@ -160,9 +167,8 @@ class LabTest(object):
 	def auto_answer(self):
 		"""自动化答题
 		"""
+		# 真正的考试入口url true_entrance_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&cmd=kaoshi_chushih&kaoshih=33953"
 		# 这里是自测题的入口url,非真正考试的入口
-		# 真正的考试入口url
-		true_entrance_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&cmd=kaoshi_chushih&kaoshih=33953"
 		entrance_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&tikubh=43361&cmd=testing"
 		test_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&cmd=dati&mode=test"
 		submit_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&cmd=tijiao&mode=test"
@@ -190,7 +196,7 @@ class LabTest(object):
 			score_text = soup.find('div', {'class':'shuoming'}).text
 			score_info = r"本次考试你的得分为([^。]+)分"
 			score = int(re.findall(score_info, score_text)[0])
-			print("[INFO]: 考试分数为: %d 分" %(100))
+			print("[INFO]: 考试分数为: %d 分" %(score))
 			print("[INFO]: 答案详情: http://211.64.142.94:8080/" + soup.find('div', {'class':'nav'}).find('a').attrs['href'])
 		elif confirm == 'n':
 			print("[INFO]: 程序终止")
@@ -271,5 +277,5 @@ class LabTest(object):
 if __name__=="__main__":
 	test = LabTest()
 	if test.login_status_code == "004":
-		# test.crawl_question_database()
+		test.crawl_question_database()
 		test.auto_answer()
