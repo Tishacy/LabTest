@@ -62,7 +62,7 @@ class LabTest(object):
 		"""获取并显示验证码
 		"""
 		# 获取验证码
-		verifycode_url = "http://211.64.142.94:8080/exam_login.php?cmd=validateCode&0.059950209050286585"
+		verifycode_url = "http://211.64.142.94:8080/exam_login.php?cmd=validateCode"
 		res = self.sess.get(verifycode_url)
 		verifycode_img = open("./verifycode_img.gif", 'wb')
 		verifycode_img.write(res.content)
@@ -143,7 +143,7 @@ class LabTest(object):
 		self.Questions = []
 		self.Answers = []
 		self.Contents = []
-		for page_num in tqdm(range(1, tot_page+1), desc="获取数据"):
+		for page_num in tqdm(range(1, tot_page+1), desc="GET DATA"):
 			url = question_database_url + "&page=%d" %page_num
 			question_list, answer_list, content_list = self.crawl_question_per_page(url)
 			self.Questions.extend(question_list)
@@ -167,7 +167,8 @@ class LabTest(object):
 	def auto_answer(self):
 		"""自动化答题
 		"""
-		# 真正的考试入口url true_entrance_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&cmd=kaoshi_chushih&kaoshih=33953"
+		# 真正的考试入口url 
+		# entrance_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&cmd=kaoshi_chushih&kaoshih=33953"
 		# 这里是自测题的入口url,非真正考试的入口
 		entrance_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&tikubh=43361&cmd=testing"
 		test_url = "http://211.64.142.94:8080/redir.php?catalog_id=6&cmd=dati&mode=test"
